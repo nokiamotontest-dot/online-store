@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結帳 - 小商品商城</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">🏪 小商品商城</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="products.html">商品</a>
+            <a href="cart.html">🛒 購物車</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h2>📝 結帳</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- 送貨資料 -->
+            <div class="checkout-section">
+                <h3>📦 送貨資料</h3>
+                <form id="checkout-form" onsubmit="processCheckout(event)">
+                    <div class="form-group">
+                        <label>姓名 *</label>
+                        <input type="text" id="shipping-name" required value="${DB.currentUser?.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>電話 *</label>
+                        <input type="tel" id="shipping-phone" required value="${DB.currentUser?.phone || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>送貨地址 *</label>
+                        <textarea id="shipping-address" rows="3" required placeholder="請輸入完整送貨地址"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>備註 (選填)</label>
+                        <textarea id="shipping-note" rows="2" placeholder="例如：送貨時段、特殊要求"></textarea>
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem;">💳 付款方式</h3>
+                    <div class="form-group">
+                        <select id="payment-method" required>
+                            <option value="">請選擇付款方式</option>
+                            <option value="bank_transfer">🏦 銀行轉帳</option>
+                            <option value="cod">💵 貨到付款</option>
+                            <option value="pending">⏳ 稍後付款 (聯絡客服)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">提交訂單</button>
+                </form>
+            </div>
+            
+            <!-- 訂單摘要 -->
+            <div>
+                <div class="checkout-section">
+                    <h3>📋 訂單摘要</h3>
+                    <div id="checkout-items">
+                        <!-- 由 JavaScript 載入 -->
+                    </div>
+                </div>
+                
+                <div class="checkout-section" style="margin-top: 1rem;">
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>小計</span>
+                            <span id="checkout-subtotal">$0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>運費</span>
+                            <span id="checkout-shipping">$60</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>總計</span>
+                            <span id="checkout-total">$0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1rem; padding: 1rem; background-color: #fef3c7; border-radius: var(--radius-md);">
+                    <p style="color: #92400e; font-size: 0.875rem;">💡 提示：訂單提交後，我們會發送確認電郵到您的郵箱。</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 小商品商城. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!DB.currentUser) {
+                window.location.href = 'account.html?redirect=checkout.html';
+                return;
+            }
+            
+            renderCheckoutItems();
+        });
+
+        function renderCheckoutItems() {
+            const items = getCartItems();
+            const container = document.getElementById('checkout-items');
+            
+            if (items.length === 0) {
+                window.location.href = 'products.html';
+                return;
+            }
+            
+            container.innerHTML = items.map(item => `
+                <div class="cart-item" style="box-shadow: none; border-bottom: 1px solid var(--border-color);">
+                    <div class="cart-item-image" style="width: 60px; height: 60px;">${item.product.image}</div>
+                    <div class="cart-item-info">
+                        <p class="cart-item-name">${item.product.name}</p>
+                        <p>數量: ${item.quantity}</p>
+                        <p class="cart-item-price">${formatPrice(item.product.price * item.quantity)}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            const subtotal = calculateTotal();
+            const shipping = subtotal >= 500 ? 0 : 60;
+            const total = subtotal + shipping;
+            
+            document.getElementById('checkout-subtotal').textContent = formatPrice(subtotal);
+            document.getElementById('checkout-shipping').textContent = shipping === 0 ? '免費' : formatPrice(shipping);
+            document.getElementById('checkout-total').textContent = formatPrice(total);
+        }
+
+        function processCheckout(event) {
+            event.preventDefault();
+            
+            const items = getCartItems();
+            if (items.length === 0) {
+                showNotification('購物車是空的', 'warning');
+                return;
+            }
+            
+            const order = {
+                userId: DB.currentUser.id,
+                shipping: {
+                    name: document.getElementById('shipping-name').value,
+                    phone: document.getElementById('shipping-phone').value,
+                    address: document.getElementById('shipping-address').value,
+                    note: document.getElementById('shipping-note').value
+                },
+                paymentMethod: document.getElementById('payment-method').value,
+                items: items.map(item => ({
+                    productId: item.productId,
+                    productName: item.product.name,
+                    price: item.product.price,
+                    quantity: item.quantity
+                })),
+                subtotal: calculateTotal(),
+                shipping: calculateTotal() >= 500 ? 0 : 60,
+                total: calculateTotal(),
+                finalTotal: calculateTotal() + (calculateTotal() >= 500 ? 0 : 60),
+                status: 'pending'
+            };
+            
+            const orderId = DB.addOrder(order);
+            DB.clearCart();
+            showNotification('訂單已提交！');
+            window.location.href = `order-success.html?id=${orderId}`;
+        }
+    </script>
+</body>
+</html>

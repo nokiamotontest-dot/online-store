@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單成功 - 小商品商城</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">🏪 小商品商城</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="products.html">商品</a>
+            <a href="account.html">我的訂單</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="empty-state" style="max-width: 600px; margin: 0 auto;">
+            <div class="empty-state-icon">✅</div>
+            <h2>訂單提交成功！</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">感謝您的訂單，我們會盡快為您處理。</p>
+            
+            <div id="order-info" style="background-color: var(--card-background); padding: 2rem; border-radius: var(--radius-lg); margin: 2rem 0; text-align: left;">
+                <!-- 由 JavaScript 載入 -->
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="products.html" class="btn btn-primary">繼續購物</a>
+                <a href="account.html" class="btn btn-outline">查看訂單</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 小商品商城. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id');
+            
+            if (!orderId) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const order = DB.orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('order-info').innerHTML = `
+                <p><strong>訂單編號:</strong> ${order.id}</p>
+                <p><strong>日期:</strong> ${formatDate(order.createdAt)}</p>
+                <p><strong>狀態:</strong> <span class="order-status status-${order.status}">${getStatusText(order.status)}</span></p>
+                <p style="margin-top: 1rem;"><strong>送貨地址:</strong></p>
+                <p>${order.shipping?.name || 'N/A'}</p>
+                <p>${order.shipping?.address || 'N/A'}</p>
+                <p style="margin-top: 1rem;"><strong>訂單摘要:</strong></p>
+                ${order.items.map(item => `
+                    <p>${item.productName} x ${item.quantity} = ${formatPrice(item.price * item.quantity)}</p>
+                `).join('')}
+                <p style="margin-top: 1rem; font-size: 1.25rem;"><strong>總計: ${formatPrice(order.finalTotal)}</strong></p>
+            `;
+        });
+    </script>
+</body>
+</html>

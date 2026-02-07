@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>後台管理 - 小商品商城</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">🏪 小商品商城</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="products.html">商品</a>
+            <a href="cart.html">🛒 購物車</a>
+            <a href="index.html">返回前臺</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h2>⚙️ 後台管理</h2>
+        
+        <!-- 統計數據 -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-products">0</div>
+                <div class="stat-label">商品數量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-orders">0</div>
+                <div class="stat-label">訂單數量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-users">0</div>
+                <div class="stat-label">用戶數量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-revenue">$0</div>
+                <div class="stat-label">總收入</div>
+            </div>
+        </div>
+        
+        <!-- 管理選項卡 -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchAdminTab('products')">商品管理</div>
+            <div class="tab" onclick="switchAdminTab('orders')">訂單管理</div>
+            <div class="tab" onclick="switchAdminTab('users')">用戶管理</div>
+        </div>
+        
+        <!-- 商品管理 -->
+        <div id="admin-products-tab">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3>商品列表</h3>
+                <a href="admin-product-form.html" class="btn btn-primary">+ 添加新商品</a>
+            </div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>商品名稱</th>
+                        <th>分類</th>
+                        <th>價格</th>
+                        <th>庫存</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-products-body">
+                    <!-- 由 JavaScript 載入 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 訂單管理 -->
+        <div id="admin-orders-tab" style="display: none;">
+            <h3>所有訂單</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>商品</th>
+                        <th>金額</th>
+                        <th>狀態</th>
+                        <th>更新狀態</th>
+                        <th>日期</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-orders-body">
+                    <!-- 由 JavaScript 載入 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 用戶管理 -->
+        <div id="admin-users-tab" style="display: none;">
+            <h3>所有用戶</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>姓名</th>
+                        <th>郵箱</th>
+                        <th>角色</th>
+                        <th>註冊日期</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-users-body">
+                    <!-- 由 JavaScript 載入 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 匯出數據 -->
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--border-color);">
+            <h3>💾 數據管理</h3>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button class="btn btn-secondary" onclick="exportData()">匯出所有數據</button>
+                <button class="btn btn-danger" onclick="resetAllData()">重置所有數據</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 小商品商城. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdmin();
+            renderAdminStats();
+            renderAdminProducts();
+            renderAdminUsers();
+        });
+
+        function switchAdminTab(tab) {
+            const tabs = ['products', 'orders', 'users'];
+            tabs.forEach(t => {
+                document.getElementById(`admin-${t}-tab`).style.display = 'none';
+            });
+            document.querySelectorAll('#main-content .tab').forEach((el, i) => {
+                if (tabs[i] === tab) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+            document.getElementById(`admin-${tab}-tab`).style.display = 'block';
+        }
+
+        function renderAdminUsers() {
+            const tbody = document.getElementById('admin-users-body');
+            if (!tbody) return;
+            
+            tbody.innerHTML = DB.users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role === 'admin' ? '👑 管理員' : '👤 用戶'}</td>
+                    <td>${formatDate(user.createdAt)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function resetAllData() {
+            if (confirm('警告：這將刪除所有數據（包括商品、訂單、用戶），無法恢復！確定要繼續嗎？')) {
+                if (confirm('再次確認：真的要刪除所有數據嗎？')) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

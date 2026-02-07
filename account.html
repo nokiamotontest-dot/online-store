@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帳戶 - 小商品商城</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">🏪 小商品商城</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="products.html">商品</a>
+            <a href="cart.html">🛒 購物車 (<span id="cart-count">0</span>)</a>
+            <a href="account.html">帳戶</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- 登入/註冊表單 -->
+        <div id="auth-form" class="form-container">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">登入</div>
+                <div class="tab" onclick="switchTab('register')">註冊</div>
+            </div>
+            
+            <!-- 登入表單 -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>郵箱</label>
+                    <input type="email" name="email" required placeholder="請輸入郵箱">
+                </div>
+                <div class="form-group">
+                    <label>密碼</label>
+                    <input type="password" name="password" required placeholder="請輸入密碼">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">登入</button>
+            </form>
+            
+            <!-- 註冊表單 -->
+            <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" name="name" required placeholder="請輸入姓名">
+                </div>
+                <div class="form-group">
+                    <label>郵箱</label>
+                    <input type="email" name="email" required placeholder="請輸入郵箱">
+                </div>
+                <div class="form-group">
+                    <label>密碼</label>
+                    <input type="password" name="password" required placeholder="請輸入密碼">
+                </div>
+                <div class="form-group">
+                    <label>電話 (選填)</label>
+                    <input type="tel" name="phone" placeholder="請輸入電話">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">註冊</button>
+            </form>
+        </div>
+        
+        <!-- 用戶中心 -->
+        <div id="user-dashboard" style="display: none;">
+            <h2>歡迎回來，<span id="user-name"></span>！</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchUserTab('orders')">我的訂單</div>
+                <div class="tab" onclick="switchUserTab('profile')">個人資料</div>
+            </div>
+            
+            <!-- 訂單列表 -->
+            <div id="user-orders">
+                <!-- 訂單由 JavaScript 載入 -->
+            </div>
+            
+            <!-- 個人資料 -->
+            <div id="user-profile" style="display: none;">
+                <div class="form-container" style="max-width: 100%;">
+                    <h3>個人資料</h3>
+                    <form onsubmit="updateProfile(event)">
+                        <div class="form-group">
+                            <label>姓名</label>
+                            <input type="text" id="profile-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>郵箱</label>
+                            <input type="email" id="profile-email" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>電話</label>
+                            <input type="tel" id="profile-phone">
+                        </div>
+                        <button type="submit" class="btn btn-primary">更新資料</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 小商品商城. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            
+            // 檢查 URL 參數
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'register') {
+                switchTab('register');
+            }
+        });
+
+        function switchTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const tabs = document.querySelectorAll('#auth-form .tab');
+            
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function checkAuth() {
+            if (DB.currentUser) {
+                document.getElementById('auth-form').style.display = 'none';
+                document.getElementById('user-dashboard').style.display = 'block';
+                document.getElementById('user-name').textContent = DB.currentUser.name;
+                document.getElementById('profile-name').value = DB.currentUser.name;
+                document.getElementById('profile-email').value = DB.currentUser.email;
+                document.getElementById('profile-phone').value = DB.currentUser.phone || '';
+                renderUserOrders();
+            } else {
+                document.getElementById('auth-form').style.display = 'block';
+                document.getElementById('user-dashboard').style.display = 'none';
+            }
+        }
+
+        function switchUserTab(tab) {
+            const ordersTab = document.getElementById('user-orders');
+            const profileTab = document.getElementById('user-profile');
+            const tabs = document.querySelectorAll('#user-dashboard .tab');
+            
+            if (tab === 'orders') {
+                ordersTab.style.display = 'block';
+                profileTab.style.display = 'none';
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                ordersTab.style.display = 'none';
+                profileTab.style.display = 'block';
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        function renderUserOrders() {
+            const orders = renderOrders();
+            const container = document.getElementById('user-orders');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📦</div>
+                        <h3>還沒有訂單</h3>
+                        <p>去商店逛逛吧！</p>
+                        <a href="products.html" class="btn btn-primary" style="margin-top: 1rem;">開始購物</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <strong>訂單編號: ${order.id}</strong>
+                            <p style="color: var(--text-secondary); font-size: 0.875rem;">${formatDate(order.createdAt)}</p>
+                        </div>
+                        <span class="order-status status-${order.status}">${getStatusText(order.status)}</span>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <p>${item.productName} x ${item.quantity}</p>
+                        `).join('')}
+                    </div>
+                    <div class="order-total" style="text-align: right; margin-top: 1rem; font-weight: 700;">
+                        總計: ${formatPrice(order.finalTotal)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateProfile(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            DB.currentUser.name = formData.get('name');
+            DB.currentUser.phone = formData.get('phone');
+            
+            // 更新 users 數組
+            const index = DB.users.findIndex(u => u.id === DB.currentUser.id);
+            if (index !== -1) {
+                DB.users[index] = DB.currentUser;
+                DB.saveUsers();
+            }
+            
+            DB.saveCurrentUser();
+            document.getElementById('user-name').textContent = DB.currentUser.name;
+            showNotification('個人資料已更新');
+        }
+    </script>
+</body>
+</html>

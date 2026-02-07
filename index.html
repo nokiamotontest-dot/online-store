@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小商品商城 - 獨立電商網站</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">🏪 小商品商城</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="products.html">商品</a>
+            <a href="cart.html">🛒 購物車 (<span id="cart-count">0</span>)</a>
+            <a href="account.html">帳戶</a>
+            <a href="admin.html" id="admin-link" style="display:none;">後台</a>
+            <button id="logout-btn" style="display:none;">登出</button>
+        </div>
+    </nav>
+
+    <!-- 主要內容區 -->
+    <main class="main-content">
+        <!-- 首頁 Banner -->
+        <section class="hero">
+            <h1>歡迎來到小商品商城</h1>
+            <p>發現獨特的小商品，精緻生活從這裡開始</p>
+            <a href="products.html" class="btn btn-primary">開始購物</a>
+        </section>
+
+        <!-- 熱門商品 -->
+        <section class="featured-products">
+            <h2>🔥 熱門商品</h2>
+            <div id="featured-grid" class="product-grid">
+                <!-- 由 JavaScript 載入 -->
+            </div>
+        </section>
+
+        <!-- 商品分類 -->
+        <section class="categories">
+            <h2>📂 商品分類</h2>
+            <div class="category-grid">
+                <div class="category-card" onclick="showCategory('生活用品')">
+                    <span class="category-icon">🏠</span>
+                    <h3>生活用品</h3>
+                </div>
+                <div class="category-card" onclick="showCategory('文具用品')">
+                    <span class="category-icon">✏️</span>
+                    <h3>文具用品</h3>
+                </div>
+                <div class="category-card" onclick="showCategory('飾品配件')">
+                    <span class="category-icon">💎</span>
+                    <h3>飾品配件</h3>
+                </div>
+                <div class="category-card" onclick="showCategory('創意商品')">
+                    <span class="category-icon">🎨</span>
+                    <h3>創意商品</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- 網站特色 -->
+        <section class="features">
+            <h2>✨ 網站特色</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🚚</span>
+                    <h3>免費配送</h3>
+                    <p>訂單滿 $500 免運費</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💳</span>
+                    <h3>安全付款</h3>
+                    <p>多種付款方式</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔄</span>
+                    <h3>7天退換</h3>
+                    <p>購物無憂</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💬</span>
+                    <h3>客戶服務</h3>
+                    <p>24/7 在線支持</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>關於我們</h4>
+                <p>小商品商城 - 您的專屬購物平台</p>
+                <p>Email: info@smallshop.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>購物指南</h4>
+                <a href="#">購物流程</a>
+                <a href="#">付款方式</a>
+                <a href="#">退換政策</a>
+            </div>
+            <div class="footer-section">
+                <h4>聯絡我們</h4>
+                <p>客服電話: 1234-5678</p>
+                <p>營業時間: 9:00 - 18:00</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 小商品商城. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="js/home.js"></script>
+</body>
+</html>

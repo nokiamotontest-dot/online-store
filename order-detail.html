@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單詳情 - 小商品商城</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="index.html">🏪 小商品商城</a>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">首頁</a>
+            <a href="products.html">商品</a>
+            <a href="account.html">返回帳戶</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div id="order-detail" style="max-width: 800px; margin: 0 auto;">
+            <!-- 由 JavaScript 載入 -->
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 小商品商城. All Rights Reserved.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id');
+            
+            if (!orderId) {
+                window.location.href = 'account.html';
+                return;
+            }
+            
+            const order = DB.orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                window.location.href = 'account.html';
+                return;
+            }
+            
+            const container = document.getElementById('order-detail');
+            
+            container.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2>訂單 ${order.id}</h2>
+                    <span class="order-status status-${order.status}">${getStatusText(order.status)}</span>
+                </div>
+                
+                <div class="checkout-section">
+                    <h3>📋 訂單資料</h3>
+                    <p><strong>日期:</strong> ${formatDate(order.createdAt)}</p>
+                    <p><strong>狀態:</strong> ${getStatusText(order.status)}</p>
+                    <p><strong>付款方式:</strong> ${getPaymentText(order.paymentMethod)}</p>
+                </div>
+                
+                <div class="checkout-section" style="margin-top: 1rem;">
+                    <h3>📦 送貨資料</h3>
+                    <p><strong>姓名:</strong> ${order.shipping?.name || 'N/A'}</p>
+                    <p><strong>電話:</strong> ${order.shipping?.phone || 'N/A'}</p>
+                    <p><strong>地址:</strong> ${order.shipping?.address || 'N/A'}</p>
+                    ${order.shipping?.note ? `<p><strong>備註:</strong> ${order.shipping.note}</p>` : ''}
+                </div>
+                
+                <div class="checkout-section" style="margin-top: 1rem;">
+                    <h3>🛒 商品列表</h3>
+                    ${order.items.map(item => `
+                        <div class="cart-item" style="box-shadow: none; border-bottom: 1px solid var(--border-color);">
+                            <div class="cart-item-image">📦</div>
+                            <div class="cart-item-info" style="flex: 1;">
+                                <p class="cart-item-name">${item.productName}</p>
+                                <p>數量: ${item.quantity}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p class="cart-item-price">${formatPrice(item.price * item.quantity)}</p>
+                                <p style="color: var(--text-secondary); font-size: 0.875rem;">單價: ${formatPrice(item.price)}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="checkout-section" style="margin-top: 1rem;">
+                    <h3>💰 付款摘要</h3>
+                    <div class="order-summary">
+                        <div class="summary-row">
+                            <span>小計</span>
+                            <span>${formatPrice(order.subtotal)}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>運費</span>
+                            <span>${order.shipping === 0 ? '免費' : formatPrice(order.shipping)}</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>總計</span>
+                            <span style="color: var(--danger-color); font-size: 1.5rem;">${formatPrice(order.finalTotal)}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <a href="account.html" class="btn btn-primary">返回訂單列表</a>
+                </div>
+            `;
+        });
+
+        function getPaymentText(method) {
+            const map = {
+                bank_transfer: '🏦 銀行轉帳',
+                cod: '💵 貨到付款',
+                pending: '⏳ 稍後付款'
+            };
+            return map[method] || method;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>添加/編輯商品 - 小商品商城</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="admin.html">⚙️ 後台管理</a>
+        </div>
+        <div class="nav-links">
+            <a href="admin.html">返回後台</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="form-container" style="max-width: 800px;">
+            <h2 id="page-title">添加新商品</h2>
+            
+            <form id="product-form" onsubmit="saveProduct(event)">
+                <input type="hidden" id="product-id">
+                
+                <div class="form-group">
+                    <label>商品名稱 *</label>
+                    <input type="text" id="product-name" required placeholder="請輸入商品名稱">
+                </div>
+                
+                <div class="form-group">
+                    <label>商品分類 *</label>
+                    <select id="product-category" required>
+                        <option value="">請選擇分類</option>
+                        <option value="生活用品">生活用品</option>
+                        <option value="文具用品">文具用品</option>
+                        <option value="飾品配件">飾品配件</option>
+                        <option value="創意商品">創意商品</option>
+                    </select>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>售價 *</label>
+                        <input type="number" id="product-price" required placeholder="請輸入售價" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>原價 (選填)</label>
+                        <input type="number" id="product-original-price" placeholder="如有折扣請輸入原價" min="0">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>庫存數量</label>
+                    <input type="number" id="product-stock" value="0" min="0">
+                </div>
+                
+                <div class="form-group">
+                    <label>商品圖示</label>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                        ${['☕','📓','📿','🪴','🔖','🕶️','💡','🎐','🧸','🎁','🎀','💄','👛','🎧','⌚','🔑','💼','🎒','🕯️','🪣'].map(emoji => `
+                            <button type="button" class="emoji-btn" onclick="selectEmoji('${emoji}')" style="font-size: 1.5rem; padding: 0.5rem; border: 2px solid transparent; background: none; cursor: pointer;">${emoji}</button>
+                        `).join('')}
+                    </div>
+                    <input type="hidden" id="product-image" value="📦">
+                </div>
+                
+                <div class="form-group">
+                    <label>商品描述 *</label>
+                    <textarea id="product-description" rows="4" required placeholder="請輸入商品描述"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                        <input type="checkbox" id="product-featured">
+                        <span>設為熱門商品</span>
+                    </label>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary">保存商品</button>
+                    <a href="admin.html" class="btn btn-secondary">取消</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        let isEditing = false;
+        let editingProductId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdmin();
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            editingProductId = parseInt(urlParams.get('id'));
+            
+            if (editingProductId) {
+                isEditing = true;
+                loadProduct(editingProductId);
+            }
+        });
+
+        function selectEmoji(emoji) {
+            document.getElementById('product-image').value = emoji;
+            document.querySelectorAll('.emoji-btn').forEach(btn => {
+                btn.style.borderColor = btn.textContent === emoji ? 'var(--primary-color)' : 'transparent';
+            });
+        }
+
+        function loadProduct(id) {
+            const product = getProduct(id);
+            if (!product) {
+                window.location.href = 'admin.html';
+                return;
+            }
+            
+            document.getElementById('page-title').textContent = '編輯商品';
+            document.getElementById('product-id').value = product.id;
+            document.getElementById('product-name').value = product.name;
+            document.getElementById('product-category').value = product.category;
+            document.getElementById('product-price').value = product.price;
+            document.getElementById('product-original-price').value = product.originalPrice || '';
+            document.getElementById('product-stock').value = product.stock;
+            document.getElementById('product-image').value = product.image;
+            document.getElementById('product-description').value = product.description;
+            document.getElementById('product-featured').checked = product.featured || false;
+            
+            selectEmoji(product.image);
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            
+            const product = {
+                name: document.getElementById('product-name').value,
+                category: document.getElementById('product-category').value,
+                price: parseInt(document.getElementById('product-price').value),
+                originalPrice: parseInt(document.getElementById('product-original-price').value) || null,
+                stock: parseInt(document.getElementById('product-stock').value) || 0,
+                image: document.getElementById('product-image').value || '📦',
+                description: document.getElementById('product-description').value,
+                featured: document.getElementById('product-featured').checked
+            };
+            
+            if (isEditing) {
+                product.id = editingProductId;
+                DB.updateProduct(editingProductId, product);
+                showNotification('商品已更新');
+            } else {
+                DB.addProduct(product);
+                showNotification('商品已添加');
+            }
+            
+            window.location.href = 'admin.html';
+        }
+    </script>
+    
+    <style>
+        .emoji-btn:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</body>
+</html>

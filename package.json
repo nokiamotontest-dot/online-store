@@ -1,0 +1,12 @@
+{
+  "name": "online-store",
+  "version": "1.0.0",
+  "description": "一個完整的電商網站系統，包含前端頁面和後台管理功能。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
