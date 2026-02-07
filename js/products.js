@@ -75,7 +75,11 @@ function renderProducts(products, containerId) {
     
     container.innerHTML = products.map(product => `
         <div class="product-card" data-id="${product.id}">
-            <div class="product-image">${product.image}</div>
+            <div class="product-image">
+                ${product.image.endsWith('.svg') || product.image.endsWith('.jpg') || product.image.endsWith('.png') 
+                    ? `<img src="${product.image}" alt="${product.name}" onerror="this.outerHTML='📦'">`
+                    : product.image}
+            </div>
             <div class="product-info">
                 <span class="product-category">${product.category}</span>
                 <h3 class="product-name">${product.name}</h3>

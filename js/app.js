@@ -375,7 +375,11 @@ function renderProducts(products, containerId) {
     
     container.innerHTML = products.map(product => `
         <div class="product-card" data-id="${product.id}">
-            <div class="product-image">${product.image}</div>
+            <div class="product-image">
+                ${product.image.endsWith('.svg') || product.image.endsWith('.jpg') || product.image.endsWith('.png') 
+                    ? `<img src="${product.image}" alt="${product.name}" onerror="this.outerHTML='📦'" style="width:100%;height:200px;object-fit:contain;">`
+                    : product.image}
+            </div>
             <div class="product-info">
                 <span class="product-category">${product.category}</span>
                 <h3 class="product-name">${product.name}</h3>
@@ -436,7 +440,11 @@ function renderCart() {
     
     container.innerHTML = items.map(item => `
         <div class="cart-item">
-            <div class="cart-item-image">${item.product.image}</div>
+            <div class="cart-item-image">
+                ${item.product.image.endsWith('.svg') || item.product.image.endsWith('.jpg') || item.product.image.endsWith('.png') 
+                    ? `<img src="${item.product.image}" alt="${item.product.name}" onerror="this.outerHTML='📦'" style="width:80px;height:80px;object-fit:contain;">`
+                    : item.product.image}
+            </div>
             <div class="cart-item-info">
                 <h3 class="cart-item-name">${item.product.name}</h3>
                 <p class="cart-item-price">${formatPrice(item.product.price)}</p>
@@ -560,7 +568,12 @@ function renderAdminProducts() {
     tbody.innerHTML = DB.products.map(product => `
         <tr>
             <td>${product.id}</td>
-            <td>${product.image} ${product.name}</td>
+            <td>
+                ${product.image.endsWith('.svg') || product.image.endsWith('.jpg') || product.image.endsWith('.png') 
+                    ? `<img src="${product.image}" alt="${product.name}" onerror="this.outerHTML='📦'" style="width:40px;height:40px;object-fit:contain;vertical-align:middle;">`
+                    : product.image}
+                ${product.name}
+            </td>
             <td>${product.category}</td>
             <td>${formatPrice(product.price)}</td>
             <td>${product.stock}</td>

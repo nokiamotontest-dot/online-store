@@ -27,7 +27,11 @@ function renderProductDetail() {
     const p = currentProduct;
     
     container.innerHTML = `
-        <div class="product-gallery">${p.image}</div>
+        <div class="product-gallery">
+            ${p.image.endsWith('.svg') || p.image.endsWith('.jpg') || p.image.endsWith('.png') 
+                ? `<img src="${p.image}" alt="${p.name}" onerror="this.outerHTML='📦'" style="width:100%;max-height:400px;object-fit:contain;">`
+                : p.image}
+        </div>
         <div class="product-details">
             <span class="product-category">${p.category}</span>
             <h1>${p.name}</h1>
