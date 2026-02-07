@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00FFFF"/>
+      <stop offset="50%" style="stop-color:#40E0D0"/>
+      <stop offset="100%" style="stop-color:#00CED1"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#1a1a2e"/>
+  <circle cx="100" cy="100" r="80" fill="none" stroke="url(#cyan)" stroke-width="3"/>
+  <text x="100" y="95" font-size="50" text-anchor="middle" fill="url(#cyan">💧</text>
+  <text x="100" y="140" font-size="18" text-anchor="middle" fill="#00FFFF">AQUARIUS</text>
+  <text x="100" y="160" font-size="12" text-anchor="middle" fill="#aaa">JELLYFISH</text>
+</svg>
