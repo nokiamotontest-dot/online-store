@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>網店功能測試</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .test-result {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        .test-result.pass { background: #d4edda; border-left: 5px solid #28a745; }
+        .test-result.fail { background: #f8d7da; border-left: 5px solid #dc3545; }
+        .test-result .icon { font-size: 24px; margin-right: 15px; }
+        .test-result .message { flex: 1; }
+        .summary {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .summary.success { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+        .summary.error { background: linear-gradient(135deg, #dc3545, #c82333); color: white; }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        .btn:hover { transform: scale(1.05); }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 網店功能測試</h1>
+        
+        <div id="test-results">
+            <div class="test-result" id="test-1">
+                <span class="icon">⏳</span>
+                <span class="message">正在測試 JavaScript 加載...</span>
+            </div>
+            <div class="test-result" id="test-2">
+                <span class="icon">⏳</span>
+                <span class="message">正在測試商品數據...</span>
+            </div>
+            <div class="test-result" id="test-3">
+                <span class="icon">⏳</span>
+                <span class="message">正在測試圖片渲染...</span>
+            </div>
+            <div class="test-result" id="test-4">
+                <span class="icon">⏳</span>
+                <span class="message">正在測試加入購物車...</span>
+            </div>
+            <div class="test-result" id="test-5">
+                <span class="icon">⏳</span>
+                <span class="message">正在測試結帳流程...</span>
+            </div>
+        </div>
+        
+        <div id="summary" class="summary" style="display:none;">
+            <h2 id="summary-title"></h2>
+            <p id="summary-message"></p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://nokiamotontest-dot.github.io/online-store/" class="btn btn-primary" target="_blank">
+                🏪 打開網店
+            </a>
+            <a href="products.html" class="btn btn-success">
+                🛒 測試購買流程
+            </a>
+        </div>
+    </div>
+    
+    <script>
+// ========== 測試腳本 ==========
+document.addEventListener('DOMContentLoaded', function() {
+    runTests();
+});
+
+async function runTests() {
+    let passed = 0;
+    let total = 5;
+    
+    // 測試 1: JavaScript 加載
+    await new Promise(resolve => setTimeout(resolve, 500));
+    if (typeof DB !== 'undefined' && DB.products && DB.products.length > 0) {
+        document.getElementById('test-1').className = 'test-result pass';
+        document.getElementById('test-1').innerHTML = '<span class="icon">✅</span><span class="message">JavaScript 加載正常 - 找到 ' + DB.products.length + ' 個商品</span>';
+        passed++;
+    } else {
+        document.getElementById('test-1').className = 'test-result fail';
+        document.getElementById('test-1').innerHTML = '<span class="icon">❌</span><span class="message">JavaScript 加載失敗</span>';
+    }
+    
+    // 測試 2: 商品數據
+    if (typeof DB !== 'undefined' && DB.products && DB.products.length >= 12) {
+        document.getElementById('test-2').className = 'test-result pass';
+        document.getElementById('test-2').innerHTML = '<span class="icon">✅</span><span class="message">商品數據正常 - ' + DB.products.length + ' 個商品已加載</span>';
+        passed++;
+    } else {
+        document.getElementById('test-2').className = 'test-result fail';
+        document.getElementById('test-2').innerHTML = '<span class="icon">❌</span><span class="message">商品數據異常</span>';
+    }
+    
+    // 測試 3: 圖片渲染
+    if (typeof DB !== 'undefined' && DB.products) {
+        const productsWithImages = DB.products.filter(p => 
+            p.image && (p.image.endsWith('.svg') || p.image.endsWith('.jpg') || p.image.endsWith('.png'))
+        );
+        if (productsWithImages.length >= 12) {
+            document.getElementById('test-3').className = 'test-result pass';
+            document.getElementById('test-3').innerHTML = '<span class="icon">✅</span><span class="message">圖片渲染正常 - ' + productsWithImages.length + ' 個商品有圖片</span>';
+            passed++;
+        } else {
+            document.getElementById('test-3').className = 'test-result fail';
+            document.getElementById('test-3').innerHTML = '<span class="icon">❌</span><span class="message">圖片渲染異常</span>';
+        }
+    }
+    
+    // 測試 4: 加入購物車
+    if (typeof DB !== 'undefined') {
+        const initialCount = DB.cart.length;
+        if (typeof addToCart === 'function') {
+            addToCart(101); // 加入第一個商品
+            if (DB.cart.length > initialCount) {
+                document.getElementById('test-4').className = 'test-result pass';
+                document.getElementById('test-4').innerHTML = '<span class="icon">✅</span><span class="message">加入購物車正常</span>';
+                passed++;
+            } else {
+                document.getElementById('test-4').className = 'test-result fail';
+                document.getElementById('test-4').innerHTML = '<span class="icon">❌</span><span class="message">加入購物車失敗</span>';
+            }
+        } else {
+            document.getElementById('test-4').className = 'test-result fail';
+            document.getElementById('test-4').innerHTML = '<span class="icon">❌</span><span class="message">addToCart 函數未定義</span>';
+        }
+    }
+    
+    // 測試 5: 結帳流程（檢查函數是否存在）
+    if (typeof checkout === 'function' && typeof calculateTotal === 'function') {
+        document.getElementById('test-5').className = 'test-result pass';
+        document.getElementById('test-5').innerHTML = '<span class="icon">✅</span><span class="message">結帳函數正常</span>';
+        passed++;
+    } else {
+        document.getElementById('test-5').className = 'test-result fail';
+        document.getElementById('test-5').innerHTML = '<span class="icon">❌</span><span class="message">結帳函數異常</span>';
+    }
+    
+    // 顯示總結
+    const summary = document.getElementById('summary');
+    summary.style.display = 'block';
+    if (passed === total) {
+        summary.className = 'summary success';
+        document.getElementById('summary-title').textContent = '🎉 所有測試通過！';
+        document.getElementById('summary-message').textContent = '網店功能正常，現在可以開始購物了！';
+    } else {
+        summary.className = 'summary error';
+        document.getElementById('summary-title').textContent = '⚠️ 部分測試失敗';
+        document.getElementById('summary-message').textContent = '通過: ' + passed + '/' + total + ' 測試';
+    }
+}
+    </script>
+</body>
+</html>
