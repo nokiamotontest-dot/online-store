@@ -1,16 +1,27 @@
 // ========== 首頁專用腳本 ==========
 document.addEventListener('DOMContentLoaded', function() {
-    // 載入熱門商品
+    // 載入海洋星座商品
+    loadZodiacProducts();
+    
+    // 載入其他熱門商品
     loadFeaturedProducts();
     
     // 初始化演示帳戶
     initDemoAccount();
 });
 
-// 載入熱門商品
+// 載入海洋星座商品（首頁主打）
+function loadZodiacProducts() {
+    const zodiacProducts = DB.products.filter(p => p.category === '海洋星座');
+    if (zodiacProducts.length > 0) {
+        renderProducts(zodiacProducts.slice(0, 8), 'zodiac-grid');
+    }
+}
+
+// 載入其他熱門商品
 function loadFeaturedProducts() {
-    const featured = DB.products.filter(p => p.featured);
-    renderProducts(featured, 'featured-grid');
+    const featured = DB.products.filter(p => p.category !== '海洋星座' && p.featured);
+    renderProducts(featured.slice(0, 4), 'featured-grid');
 }
 
 // 初始化演示帳戶

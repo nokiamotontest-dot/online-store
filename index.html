@@ -26,14 +26,23 @@
     <main class="main-content">
         <!-- 首頁 Banner -->
         <section class="hero">
-            <h1>歡迎來到小商品商城</h1>
-            <p>發現獨特的小商品，精緻生活從這裡開始</p>
-            <a href="products.html" class="btn btn-primary">開始購物</a>
+            <h1>🌊 海洋星座鎖匙扣專區</h1>
+            <p>12星座 × 海洋生物 | 獨特設計幸運配件</p>
+            <a href="products.html?category=海洋星座" class="btn btn-primary">探索全部星座</a>
+        </section>
+
+        <!-- 海洋星座商品 -->
+        <section class="featured-products">
+            <h2>🔱 海洋星座鎖匙扣系列</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">結合12星座守護獸與海洋生物的獨特設計</p>
+            <div id="zodiac-grid" class="product-grid">
+                <!-- 由 JavaScript 載入 -->
+            </div>
         </section>
 
         <!-- 熱門商品 -->
         <section class="featured-products">
-            <h2>🔥 熱門商品</h2>
+            <h2>🔥 其他熱門商品</h2>
             <div id="featured-grid" class="product-grid">
                 <!-- 由 JavaScript 載入 -->
             </div>
@@ -46,6 +55,10 @@
                 <div class="category-card" onclick="showCategory('生活用品')">
                     <span class="category-icon">🏠</span>
                     <h3>生活用品</h3>
+                </div>
+                <div class="category-card" onclick="showCategory('海洋星座')">
+                    <span class="category-icon">🔱</span>
+                    <h3>海洋星座</h3>
                 </div>
                 <div class="category-card" onclick="showCategory('文具用品')">
                     <span class="category-icon">✏️</span>

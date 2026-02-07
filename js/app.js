@@ -136,104 +136,164 @@ const DB = {
     }
 };
 
-// 默認產品數據
+// 海洋星座鎖匙扣系列商品
 function getDefaultProducts() {
     return [
+        // 🐏 白羊座 + 海馬
         {
-            id: 1,
-            name: '精緻陶瓷杯',
-            category: '生活用品',
-            price: 299,
-            originalPrice: 399,
-            description: '手工製作的精美陶瓷杯，適合日常使用或送禮',
-            image: '☕',
+            id: 101,
+            name: '♈️ 白羊座 × 海馬鎖匙扣',
+            category: '海洋星座',
+            price: 189,
+            originalPrice: 249,
+            description: '✨ 活力充沛的白羊座守護神是海馬！公羊的勇氣遇上海洋的智慧，黃金海馬引領你勇敢追夢。優質不鏽鋼材質，精緻拋光處理，寓意「勇氣與希望」。送給白羊座的朋友或自己，都是最佳選擇！',
+            image: '🐏',
             featured: true,
             stock: 50,
             createdAt: '2025-01-01T00:00:00.000Z'
         },
+        // 🐢 金牛座 + 海龜
         {
-            id: 2,
-            name: '創意筆記本',
-            category: '文具用品',
-            price: 159,
-            originalPrice: 199,
-            description: '100頁高品質紙張，封面採用防水材質',
-            image: '📓',
+            id: 102,
+            name: '♉️ 金牛座 × 海龜鎖匙扣',
+            category: '海洋星座',
+            price: 199,
+            originalPrice: 269,
+            description: '🐢 穩重踏實的金牛座守護神是海龜！金牛的堅定遇上海洋的從容，代表「長壽與財富」。採用優質鋅合金材質，仿古銅色澤，寓意「穩重與富足」。金牛座的幸運物，經典永恆！',
+            image: '🐢',
             featured: true,
-            stock: 100,
+            stock: 45,
             createdAt: '2025-01-02T00:00:00.000Z'
         },
+        // 🐬 雙子座 + 海豚
         {
-            id: 3,
-            name: '幸運手鍊',
-            category: '飾品配件',
-            price: 459,
-            originalPrice: 599,
-            description: '精選天然石編織而成，帶來好運',
-            image: '📿',
+            id: 103,
+            name: '♊️ 雙子座 × 海豚鎖匙扣',
+            category: '海洋星座',
+            price: 179,
+            originalPrice: 229,
+            description: '🐬 聰明伶俐的雙子座守護神是海豚！雙子的靈活遇上海洋的友善，代表「智慧與自由」。仿真海豚造型，活潑生動。不鏽鋼材質搭配漸層色彩，寓意「溝通與快樂」！',
+            image: '🐬',
             featured: true,
-            stock: 30,
+            stock: 60,
             createdAt: '2025-01-03T00:00:00.000Z'
         },
+        // 🦀 巨蟹座 + 螃蟹
         {
-            id: 4,
-            name: '桌上型小盆栽',
-            category: '生活用品',
-            price: 359,
-            originalPrice: 450,
-            description: '迷你多肉植物，適合辦公室或書桌',
-            image: '🪴',
-            featured: false,
-            stock: 40,
+            id: 104,
+            name: '♋️ 巨蟹座 × 螃蟹鎖匙扣',
+            category: '海洋星座',
+            price: 189,
+            originalPrice: 249,
+            description: '🦀 溫暖顧家的巨蟹座守護神是螃蟹！巨蟹的溫柔遇上海洋的包容，代表「家庭與保護」。仿真螃蟹造型，雙螯可動。優質環保材質，寓意「溫暖與安全」。送給最珍視的人！',
+            image: '🦀',
+            featured: true,
+            stock: 55,
             createdAt: '2025-01-04T00:00:00.000Z'
         },
+        // 🦁 獅子座 + 獅子魚
         {
-            id: 5,
-            name: '創意書籤',
-            category: '文具用品',
-            price: 99,
-            originalPrice: 129,
-            description: '金屬書籤，造型獨特',
-            image: '🔖',
-            featured: false,
-            stock: 200,
+            id: 105,
+            name: '♌️ 獅子座 × 獅子魚鎖匙扣',
+            category: '海洋星座',
+            price: 219,
+            originalPrice: 289,
+            description: '🦁 自信霸氣的獅子座守護神是獅子魚！獅子的尊貴遇上海洋的神秘，代表「王者風範」。獅子魚造型華麗，色彩斑斕。電鍍工藝，璀璨奪目，寓意「尊貴與自信」！',
+            image: '🦁',
+            featured: true,
+            stock: 40,
             createdAt: '2025-01-05T00:00:00.000Z'
         },
+        // 🌟 處女座 + 海星
         {
-            id: 6,
-            name: '時尚太陽眼鏡',
-            category: '飾品配件',
-            price: 699,
-            originalPrice: 899,
-            description: 'UV400防護，輕盈舒適',
-            image: '🕶️',
+            id: 106,
+            name: '♍️ 處女座 × 海星鎖匙扣',
+            category: '海洋星座',
+            price: 169,
+            originalPrice: 219,
+            description: '🌟 追求完美的處女座守護神是海星！處女的純潔遇上海洋的璀璨，代表「完美與純潔」。五角海星造型，精緻小巧。珍珠鍍層，寓意「純潔與完美」。送給追求完美的她！',
+            image: '⭐',
             featured: true,
-            stock: 25,
+            stock: 65,
             createdAt: '2025-01-06T00:00:00.000Z'
         },
+        // ⚖️ 天秤座 + 熱帶魚
         {
-            id: 7,
-            name: '創意夜燈',
-            category: '創意商品',
-            price: 499,
-            originalPrice: 650,
-            description: '柔和LED燈光，可遙控控制',
-            image: '💡',
-            featured: false,
-            stock: 35,
+            id: 107,
+            name: '♎️ 天秤座 × 熱帶魚鎖匙扣',
+            category: '海洋星座',
+            price: 189,
+            originalPrice: 249,
+            description: '🐠 追求平衡的天秤座守護神是熱帶魚！天秤的和諧遇上海洋的繽紛，代表「和諧與美麗」。多彩熱帶魚造型，栩栩如生。透明琺瑯工藝，寓意「平衡與美感」！',
+            image: '🐠',
+            featured: true,
+            stock: 50,
             createdAt: '2025-01-07T00:00:00.000Z'
         },
+        // 🦂 天蠍座 + 魔鬼魚
         {
-            id: 8,
-            name: '迷你風扇',
-            category: '創意商品',
-            price: 299,
-            originalPrice: 399,
-            description: 'USB供電，靜音設計',
-            image: '🎐',
-            featured: false,
-            stock: 60,
+            id: 108,
+            name: '♏️ 天蠍座 × 魔鬼魚鎖匙扣',
+            category: '海洋星座',
+            price: 229,
+            originalPrice: 299,
+            description: '🦈 深邃神秘的天蠍座守護神是魔鬼魚！天蠍的執著遇上海洋的深沉，代表「力量與神秘」。魔鬼魚造型優雅神秘。啞光黑金屬質感，寓意「神秘與力量」！',
+            image: '🦂',
+            featured: true,
+            stock: 35,
             createdAt: '2025-01-08T00:00:00.000Z'
+        },
+        // 🏹 射手座 + 箭魚
+        {
+            id: 109,
+            name: '♐️ 射手座 × 箭魚鎖匙扣',
+            category: '海洋星座',
+            price: 199,
+            originalPrice: 269,
+            description: '🐟 自由奔放的射手座守護神是箭魚！射手的冒險遇上海洋的廣闘，代表「自由與探索」。箭魚造型流線型設計，象徵速度與方向。不鏽鋼電鍍工藝，寓意「自由與冒險」！',
+            image: '🏹',
+            featured: true,
+            stock: 45,
+            createdAt: '2025-01-09T00:00:00.000Z'
+        },
+        // 🐐 摩羯座 + 公羊魚
+        {
+            id: 110,
+            name: '♑️ 摩羯座 × 公羊魚鎖匙扣',
+            category: '海洋星座',
+            price: 209,
+            originalPrice: 279,
+            description: '🧜 腳踏實地的摩羯座守護神是公羊魚！摩羯的毅力遇上海洋的深邃，代表「堅定與成功」。公羊角造型融入海洋元素，創意獨特。復古黃銅質感，寓意「毅力與成就」！',
+            image: '🐐',
+            featured: true,
+            stock: 40,
+            createdAt: '2025-01-10T00:00:00.000Z'
+        },
+        // 💧 水瓶座 + 水母
+        {
+            id: 111,
+            name: '♒️ 水瓶座 × 水母鎖匙扣',
+            category: '海洋星座',
+            price: 189,
+            originalPrice: 249,
+            description: '🪼 創新獨特的水瓶座守護神是水母！水瓶的創意遇上海洋的晶瑩，代表「創新與獨特」。透明水母造型，夢幻唯美。半透明矽膠材質，寓意「獨特與創新」！',
+            image: '💧',
+            featured: true,
+            stock: 55,
+            createdAt: '2025-01-11T00:00:00.000Z'
+        },
+        // 🐟 雙魚座 + 雙魚
+        {
+            id: 112,
+            name: '♓️ 雙魚座 × 雙魚鎖匙扣',
+            category: '海洋星座',
+            price: 229,
+            originalPrice: 299,
+            description: '🐟 浪漫敏感的雙魚座守護神是雙魚！雙魚的夢幻遇上海洋的浪漫，代表「夢幻與愛情」。兩條小魚纏繞造型，寓意愛情與友誼。粉彩鍍層，夢幻優雅，寓意「浪漫與直覺」！',
+            image: '🐟',
+            featured: true,
+            stock: 50,
+            createdAt: '2025-01-12T00:00:00.000Z'
         }
     ];
 }
